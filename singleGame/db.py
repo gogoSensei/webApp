@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
-
+# Se requiere instalar primero pymysql para utilizar el conector 
+import pymysql
+pymysql.install_as_MySQLdb()
 import MySQLdb 
 
 DB_HOST = 'localhost' 
@@ -20,9 +22,9 @@ def run_query(query):
    	        conn.commit()              # Hacer efectiva la escritura de datos 
    	        data = None 
    	    cursor.close()                 # Cerrar el cursor 
-   	    conn.close()                   # Cerrar la conexión 
+   	    conn.clos                   # Cerrar la conexión 
    	    return data
-	except Exception as e:
+	except Exceptio as e:
 		print(e)
 	else:
 		print("Error desconocido")
