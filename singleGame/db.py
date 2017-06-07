@@ -6,8 +6,8 @@ pymysql.install_as_MySQLdb()
 import MySQLdb 
 
 DB_HOST = 'localhost' 
-DB_USER = 'isidro' 
-DB_PASS = 'kmotin818' 
+DB_USER = 'jose' #'isidro' 
+DB_PASS = 'MUSEMUSE' #'kmotin818' 
 DB_NAME = 'easygame' 
 datos = [DB_HOST, DB_USER, DB_PASS, DB_NAME]
 """docstring for DBase"""
@@ -22,9 +22,24 @@ def run_query(query):
    	        conn.commit()              # Hacer efectiva la escritura de datos 
    	        data = None 
    	    cursor.close()                 # Cerrar el cursor 
-   	    conn.clos                   # Cerrar la conexión 
+   	    conn.close()                   # Cerrar la conexión 
    	    return data
-	except Exceptio as e:
+	except Exception as e:
 		print(e)
 	else:
 		print("Error desconocido")
+
+"""
+Para conectarse a mysql
+mysql -u jose -p
+
+Inicio de la base
+CREATE DATABASE easygame ;
+USE easygame;
+
+tabla de pruebas
+CREATE TABLE directorio (nombre TEXT, correo TEXT, descripcion TEXT);
+
+insert de mentis
+INSERT INTO directorio VALUES ('joemag','greengamboa@gmail.com','hola prro');
+"""

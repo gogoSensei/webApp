@@ -49,6 +49,13 @@ def logOut():
     #response.set_cookies('custome_cookies', 'Isidro')
     return redirect(url_for('inicio'))
 
+@app.route('/register', methods=['POST'])
+def register():
+    #JCGE 06/06/2017: Que onda que pez, aqui registramos al hijo de puta
+    query = 'INSERT INTO directorio VALUES (\'%s\',\'%s\',\'%s\')' % (session['username'], session['mail'], session['coment'])
+    x = run_query(query)
+    return '<h1>Bienvenido Papu del tercer milenio<h1/>'#redirect(url_for('inicio'))
+
 @app.errorhandler(404)
 def notFound(e):
     return render_template('404.html'), 404
@@ -57,6 +64,8 @@ def notFound(e):
 def beforeRequest():
     g.test = 'test'# Se declara variables globales y se tilizaran en cualquier funsion
     #if 'username' not in session:
+    #x = run_query('SELECT * FROM directorio')
+    #print(x)
     print(request.endpoint)
     #return render_template("index.html")
 
@@ -64,6 +73,7 @@ def beforeRequest():
 def afterRequest(response):
     print("hola after request")
     print(g.test) # llama variable local
+    print(session)
     return response
 
 if (__name__=='__main__'):
