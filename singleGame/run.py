@@ -52,7 +52,8 @@ def logOut():
 @app.route('/register', methods=['POST'])
 def register():
     #JCGE 06/06/2017: Que onda que pez, aqui registramos al hijo de puta
-    query = 'INSERT INTO directorio VALUES (\'%s\',\'%s\',\'%s\')' % (session['username'], session['mail'], session['coment'])
+    #print(session)
+    query = "INSERT INTO directorio VALUES ('{0}','{1}','{2}')".format(session['username'], session['mail'], session['coment'])
     x = run_query(query)
     return '<h1>Bienvenido Papu del tercer milenio<h1/>'#redirect(url_for('inicio'))
 
@@ -73,7 +74,7 @@ def beforeRequest():
 def afterRequest(response):
     print("hola after request")
     print(g.test) # llama variable local
-    print(session)
+    #print(session)
     return response
 
 if (__name__=='__main__'):
