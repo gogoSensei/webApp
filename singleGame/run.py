@@ -19,23 +19,15 @@ url_goo = 'https://plus.google.com/u/0/'
 # Se agrega methods=['GET', 'POST'] para acceder desde las dos caracterirsticas
 @app.route('/', methods=['GET', 'POST'])
 def inicio():
-    lista = ''
     coment_form = forms.iniForm(request.form)
     #success_message = 'Bienvenido {0}'.format(coment_form.username.data)
     #flash(success_message)
-    print(g.test)# llama variable local
-    if (request.method in ['POST'] and coment_form.validate()):
-        lista = coment_form.username.data + ',' + coment_form.email.data + ',' + coment_form.comment.data
-        session['username'] = coment_form.username.data
-        session['mail'] = coment_form.email.data
-        session['coment'] = coment_form.comment.data
     response = make_response(render_template('index.html',
                             title='Single Play',
                             url_face=url_fac,
                             url_twitters=url_twitter,
                             url_google=url_goo,
                             form = coment_form))
-    response.set_cookie('listData', lista)
     return response
 
 @app.route('/logOut', methods=['GET', 'POST'])
@@ -49,6 +41,27 @@ def logOut():
     #response.set_cookies('custome_cookies', 'Isidro')
     return redirect(url_for('inicio'))
 
+@app.route('/register', methods=['POST'])
+def register():
+    #JCGE 06/06/2017: Que onda que pez, aqui registramos al hijo de puta
+    lista = ''
+    coment_form = forms.iniForm(request.form)
+    #success_message = 'Bienvenido {0}'.format(coment_form.username.data)
+    #flash(success_message)
+    print('hola perro' + g.test)# llama variable local
+    if (request.method in ['POST'] and coment_form.validate()):
+        lista = coment_form.username.data + ',' + coment_form.email.data + ',' + coment_form.comment.data
+        session['username'] = coment_form.username.data
+        session['mail'] = coment_form.email.data
+        session['coment'] = coment_form.comment.data
+    query = "INSERT INTO directorio VALUES ('{0}','{1}','{2}')".format(coment_form.username.data, coment_form.email.data, coment_form.comment.data)
+    x = run_query(query)
+    response = make_response(render_template('lobby.html',
+                            title='Inicio',
+                            form = coment_form))
+    response.set_cookie('listData', lista)
+    return response
+
 @app.errorhandler(404)
 def notFound(e):
     return render_template('404.html'), 404
@@ -57,6 +70,8 @@ def notFound(e):
 def beforeRequest():
     g.test = 'test'# Se declara variables globales y se tilizaran en cualquier funsion
     #if 'username' not in session:
+    #x = run_query('SELECT * FROM directorio')
+    #print(x)
     print(request.endpoint)
     #return render_template("index.html")
 
@@ -64,6 +79,7 @@ def beforeRequest():
 def afterRequest(response):
     print("hola after request")
     print(g.test) # llama variable local
+    #print(session)
     return response
 
 if (__name__=='__main__'):
