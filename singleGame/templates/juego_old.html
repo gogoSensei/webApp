@@ -1,0 +1,124 @@
+<!doctype html> 
+<html> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>Juego</title>
+    <script type="text/javascript" src="../static/js/phaser.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        socket.on('connect', function () {
+            socket.emit('my event', {data: 'Estoy en la matrix'});
+        });
+    </script>
+</head>
+<body>
+
+      <div id="pinche-juego">
+        <script type="text/javascript">
+        //Inicio del Juego
+        //JCGE 07/06/2017
+        var game = new Phaser.Game(800, 600, Phaser.CANVAS,
+                                   'pinche-juego', { preload: preload, create: create, update: update });
+        //  Variables globales
+        var constant_mov = 250, fps = 12;
+        function preload() {
+            //Declaramos el pinche mono
+            game.load.spritesheet('warrior-right','../static/img/warrior-right.png',160,160,8);
+            game.load.spritesheet('warrior-left','../static/img/warrior-left.png',160,160,8);
+        }
+
+        function create() {
+            //  Color del fondo
+            game.stage.backgroundColor = "#00cc00";
+            //Creamos el sprite
+            player = game.add.sprite(100,200, 'warrior-right');
+            player.animations.add('walk-right');
+            player.animations.play('walk-right', fps, true);
+            //Habilitamos la fisica dentro del juego
+            game.physics.startSystem(Phaser.Physics.ARCADE);
+            //Le decimos que el jugador formara parte de los objetos
+            //con movimiento
+            game.physics.arcade.enable(player);
+            //Que choque con las paredes
+            player.body.collideWorldBounds = true;
+            //El texto de puntaje
+            scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#FFF' });
+            //Declaramos el uso de controles
+            cursors = game.input.keyboard.createCursorKeys();
+        }
+
+        function update() {
+            //  iniciamos la velocidad en cero
+            player.body.velocity.x = 0;
+            player.body.velocity.y = 0;
+
+            //Esta variable es para darle un valor por default
+            var movement = 'walk-right';            
+
+            //  Mover izquierda
+            if (cursors.left.isDown)
+            {
+                //  Cambio en velocidad
+                player.body.velocity.x = -constant_mov;
+                //  Esta variable es para guardar cual fue la ultima direccion
+                movement = 'walk-left';
+                change_sprite('warrior-left',movement);
+            }
+            //  Mover derecha
+            else if (cursors.right.isDown)
+            {
+                //  Cambio en velocidad
+                player.body.velocity.x = constant_mov;
+                //  Esta variable es para guardar cual fue la ultima direccion
+                movement = 'walk-right';
+                change_sprite('warrior-right',movement);
+            }
+            //No esta dando ningun boton?
+            else {
+                //  Deten la animacion
+                stop_animation();
+            }
+
+            //  Mover arriba
+            if (cursors.up.isDown)
+            {
+                //  Cambio en velocidad
+                player.body.velocity.y = -constant_mov;
+                //  Tenemos el ultimo movimiento
+                change_sprite('warrior-right',movement);
+            }
+            //  Mover abajo
+            else if (cursors.down.isDown)
+            {
+                //  Cambio en velocidad
+                player.body.velocity.y = constant_mov;
+                //  Tenemos el ultimo movimiento
+                change_sprite('warrior-right',movement);
+            }
+            else {
+                stop_animation();
+            }
+            //console.log(player.animations.game);
+        }
+
+        function change_sprite(textura, direccion) {
+            if (player.animations.currentAnim.name != direccion) {
+                player.loadTexture(textura, 0);
+                player.animations.add(direccion);
+                player.animations.play(direccion, fps, true);
+            }
+            else{
+                player.animations.play(direccion, fps, true);
+            }
+        }
+        function stop_animation() {
+            if (!(cursors.left.isDown || cursors.right.isDown ||
+                cursors.up.isDown || cursors.down.isDown )) {
+                player.animations.stop(null, true);
+            }
+        }
+        </script>
+      </div>
+</body>
+</html>

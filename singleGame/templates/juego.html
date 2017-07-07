@@ -4,82 +4,17 @@
     <meta charset="UTF-8" />
     <title>Juego</title>
     <script type="text/javascript" src="../static/js/phaser.min.js"></script>
-    <!--<link rel="stylesheet" type="javascript" href="{{ url_for('static', filename='') }}">-->
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="../static/js/juego.js"></script>
+    <script type="text/javascript" src="../static/js/init_game.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        socket.on('connect', function () {
+            socket.emit('my event', {data: 'Estoy en la matrix'});
+        });
+    </script>
 </head>
 <body>
-
-<script type="text/javascript">
-//Inicio del Juego
-//JCGE 07/06/2017
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update });
-
-function preload() {
-    //Declaramos el pinche mono
-    var pixelWidth = 6;
-    var pixelHeight = 6;
-    var chick = [
-        '...55.......',
-        '.....5......',
-        '...7888887..',
-        '..788888887.',
-        '..888088808.',
-        '..888886666.',
-        '..8888644444',
-        '..8888645555',
-        '888888644444',
-        '88788776555.',
-        '78788788876.',
-        '56655677776.',
-        '456777777654',
-        '.4........4.'
-    ];
-    game.create.texture('chick', chick, pixelWidth, pixelHeight);
-}
-
-function create() {
-    //Creamos el sprite
-    player = game.add.sprite(150, 200, 'chick');
-    //Habilitamos la fisica dentro del juego
-    game.physics.startSystem(Phaser.Physics.ARCADE);
-    //Le decimos que el jugador formara parte de los objetos
-    //con movimiento
-    game.physics.arcade.enable(player);
-    //Que choque con las paredes
-    player.body.collideWorldBounds = true;
-    //El texto de puntaje
-    scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#FFF' });
-    //Declaramos el uso de controles
-    cursors = game.input.keyboard.createCursorKeys();
-}
-
-function update() {
-    //  Reset the players velocity (movement)
-    player.body.velocity.x = 0;
-    player.body.velocity.y = 0;
-
-    if (cursors.left.isDown)
-    {
-        //  Move to the left
-        player.body.velocity.x = -150;
-    }
-    else if (cursors.right.isDown)
-    {
-        //  Move to the right
-        player.body.velocity.x = 150;
-    }
-    
-    if (cursors.up.isDown)
-    {
-        //  Move to the right
-        player.body.velocity.y = -150;
-    }
-    else if (cursors.down.isDown)
-    {
-        //  Move to the right
-        player.body.velocity.y = 150;
-    }
-}
-</script>
-
+      <div id="game"></div>
 </body>
 </html>
